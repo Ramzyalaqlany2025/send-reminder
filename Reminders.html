@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-center">
+    <header class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 shadow-lg">
+        <h1 class="text-4xl font-bold">Reminders</h1>
+        <nav class="mt-4">
+            <ul class="flex justify-center space-x-6">
+                <li><a class="text-lg hover:text-gray-200" href="index.html">Home</a></li>
+                <li><a class="text-lg hover:text-gray-200" href="add-medicine.html">Add Medicine</a></li>
+                <li><a class="text-lg hover:text-gray-200" href="medicine-list.html">Medicine List</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg max-w-md">
+        <h2 class="text-xl font-semibold mb-4">Upcoming Reminders</h2>
+        <ul id="reminderList" class="text-left">
+            <!-- Reminders will be dynamically added here -->
+        </ul>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const reminderList = document.getElementById("reminderList");
+            const medicines = JSON.parse(localStorage.getItem("medicines")) || [];
+            
+            if (medicines.length === 0) {
+                reminderList.innerHTML = "<p class='text-gray-500'>No reminders set yet.</p>";
+            } else {
+                medicines.forEach(med => {
+                    const li = document.createElement("li");
+                    li.className = "p-2 border-b flex justify-between items-center";
+                    li.innerHTML = `<span><strong>${med.name}</strong> - Take ${med.frequency} times/day for ${med.duration}</span>`;
+                    reminderList.appendChild(li);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Send Medicine Reminder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Tahoma, sans-serif; padding: 20px; background-color: #f4f4f4; direction: ltr; }
+    form { background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    label { font-weight: bold; display: block; margin-top: 15px; }
+    input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
+    button { margin-top: 20px; background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    .success { color: green; margin-top: 15px; }
+    .error { color: red; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <form id="reminderForm">
+    <h2 style="text-align:center;">📩 Send Medicine Reminder</h2>
+
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" required placeholder="+966582907304">
+
+    <label for="name">Medicine Name</label>
+    <input type="text" id="name" required>
+
+    <label for="dosage">Dosage</label>
+    <input type="text" id="dosage" required>
+
+    <label for="frequency">Times per Day</label>
+    <input type="number" id="frequency" required min="1">
+
+    <label for="duration">Usage Duration</label>
+    <select id="duration" required>
+      <option value="Week">Week</option>
+      <option value="Month">Month</option>
+      <option value="3 Months">3 Months</option>
+      <option value="6 Months">6 Months</option>
+    </select>
+
+    <button type="submit">Send Reminder</button>
+    <p id="response" class="success" style="display:none;"></p>
+    <p id="error" class="error" style="display:none;"></p>
+  </form>
+
+  <script>
+    document.getElementById('reminderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const phone = document.getElementById('phone').value;
+      const name = document.getElementById('name').value;
+      const dosage = document.getElementById('dosage').value;
+      const frequency = document.getElementById('frequency').value;
+      const duration = document.getElementById('duration').value;
+
+      fetch('https://medicine-sms.onrender.com', {  // استبدل هذا بالرابط الصحيح
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, name, dosage, frequency, duration })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('response').innerText = "✅ Message sent successfully!";
+          document.getElementById('response').style.display = 'block';
+          document.getElementById('error').style.display = 'none';
+        } else {
+          throw new Error(data.error || "An error occurred");
+        }
+      })
+      .catch(err => {
+        document.getElementById('error').innerText = "❌ Failed to send: " + err.message;
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('response').style.display = 'none';
+      });
+    });
+  </script>
+
+</body>
+</html>

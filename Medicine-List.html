@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-center">
+    <header class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 shadow-lg">
+        <h1 class="text-4xl font-bold">Medicine List</h1>
+        <nav class="mt-4">
+            <ul class="flex justify-center space-x-6">
+                <li><a class="text-lg hover:text-gray-200" href="index.html">Home</a></li>
+                <li><a class="text-lg hover:text-gray-200" href="add-medicine.html">Add Medicine</a></li>
+                <li><a class="text-lg hover:text-gray-200" href="reminders.html">Reminders</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg max-w-md">
+        <h2 class="text-xl font-semibold mb-4">Your Medicines</h2>
+        <ul id="medicineList" class="text-left">
+            <!-- Medicines will be dynamically added here -->
+        </ul>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const medicineList = document.getElementById("medicineList");
+            const medicines = JSON.parse(localStorage.getItem("medicines")) || [];
+            
+            if (medicines.length === 0) {
+                medicineList.innerHTML = "<p class='text-gray-500'>No medicines added yet.</p>";
+            } else {
+                medicines.forEach(med => {
+                    const li = document.createElement("li");
+                    li.className = "p-2 border-b flex justify-between items-center";
+                    li.innerHTML = `<span><strong>${med.name}</strong> - ${med.dosage}, ${med.frequency} times/day, Duration: ${med.duration}</span>
+                                    <button class='bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700' onclick='removeMedicine("${med.name}")'>Delete</button>`;
+                    medicineList.appendChild(li);
+                });
+            }
+        });
+
+        function removeMedicine(name) {
+            let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
+            medicines = medicines.filter(med => med.name !== name);
+            localStorage.setItem("medicines", JSON.stringify(medicines));
+            location.reload();
+        }
+    </script>
+</body>
+</html>
